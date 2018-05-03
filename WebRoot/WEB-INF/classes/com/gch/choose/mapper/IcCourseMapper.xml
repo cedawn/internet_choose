@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gch.choose.mapper.IcCourseMapper" >
+  <resultMap id="BaseResultMap" type="com.gch.choose.pojo.IcCourse" >
+    <id column="course_id" property="courseId" jdbcType="BIGINT" />
+    <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+    <result column="course_tea_id" property="courseTeaId" jdbcType="BIGINT" />
+    <result column="course_classroom" property="courseClassroom" jdbcType="INTEGER" />
+    <result column="course_credit" property="courseCredit" jdbcType="INTEGER" />
+    <result column="course_date" property="courseDate" jdbcType="VARCHAR" />
+    <result column="course_time" property="courseTime" jdbcType="VARCHAR" />
+    <result column="course_state" property="courseState" jdbcType="CHAR" />
+  	<association property="icteacher" javaType="icteacher">
+  	 <id property="tea_id" column="course_tea_id"/>
+  	 <result property="tea_name" column="tea_name"/>
+  	</association>
+  </resultMap>
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    course_id, course_name, course_tea_id, course_classroom, course_credit, course_date, 
+    course_time, course_state
+  </sql>
+  <select id="selectCountBycourseClassroom" parameterType="String" resultType="int">
+  	select count(*) from ic_course
+  	<where>
+  		course_classroom=#{courseClassroom}
+  	</where>
+  
+  </select>
+  <select id="selectAllStateNullCourse" resultMap="BaseResultMap">
+  	select * from ic_course
+  	<where>
+  		course_state is null
+  	</where>
+  </select>
+  <select id="selectAllCourseByState" parameterType="Long" resultMap="BaseResultMap">
+  	select * from ic_course
+  	<where>
+  		course_tea_id=#{tea_id}
+  		and course_state is null
+  	</where>
+  </select>
+  <insert id="insertApplyCourse" parameterType="IcCourse">
+  	<selectKey keyProperty="courseId" order="AFTER" resultType="Long">
+    	SELECT LAST_INSERT_ID()
+    </selectKey>
+  	insert into ic_course (course_name, course_tea_id, 
+      course_classroom, course_credit, course_state)
+  	values ( #{param2.courseName}, #{param1.tea_id}, 
+      #{param2.courseClassroom}, #{param2.courseCredit,jdbcType=INTEGER},  
+       null)
+  </insert>
+  <select id="selectTeaCourse" parameterType="Long" resultMap="BaseResultMap">
+  		select c.course_id, c.course_name,c.course_credit,c.course_classroom
+		FROM ic_course c  LEFT JOIN ic_teacher t ON c.course_tea_id=t.tea_id
+		<where> 
+		t.tea_id=#{tea_id}
+		and c.course_state ='1'
+  		</where>
+  
+  </select>
+  <update id="updateCourse" parameterType="IcCourse">
+  	update ic_course
+  	<set>
+  		<if test="courseName !=null">
+  			course_name=#{courseName},
+  		</if>
+  		<if test="courseTeaId !=null">
+  			course_tea_id=#{courseTeaId},
+  		</if>
+  		<if test="courseClassroom !=null">
+  			course_classroom=#{courseClassroom},
+  		</if>
+  		<if test=" courseCredit !=null">
+  			 course_credit=#{ courseCredit},
+  		</if>
+  		<if test="courseState !=null">
+  			course_state=#{courseState}
+  		</if>
+  	</set>
+  	<where>
+  		course_id=#{courseId}
+  	</where>
+  </update>
+   <select id="icCourseCountByQueryVo"  parameterType="QueryVo" resultType="Integer">
+  	select count(1) from ic_course
+  	<where>
+  		<if test="courseName !=null and courseName!=''">
+  			course_name like "%"#{courseName}"%"
+  		</if>
+  		and course_state ='1'
+  	</where>
+  
+  </select>
+  <select id="selectCourseByQueryVo" parameterType="QueryVo" resultMap="BaseResultMap">
+  	select 
+  	c.course_id,c.course_name,c.course_tea_id, c.course_classroom, c.course_credit, c.course_date, 
+    c.course_time, c.course_state,t.tea_name
+    from ic_course c LEFT JOIN ic_teacher t ON c.course_tea_id=t.tea_id
+    <where>
+    	<if test="courseName !=null and courseName!=''">
+    		c.course_name like "%"#{courseName}"%"
+    	</if>
+    	and course_state ='1'
+    </where>
+    limit #{startRow},#{size}
+  </select>
+  <select id="icCourseCountByState"  parameterType="QueryVo" resultType="Integer">
+  	select count(1) from ic_course
+  	<where>
+  		course_state ='1'
+  	</where>
+  
+  </select>
+  <select id="selectCourseByState" parameterType="QueryVo" resultMap="BaseResultMap">
+  	select 
+  	c.course_id,c.course_name,c.course_tea_id, c.course_classroom, c.course_credit, c.course_date, 
+    c.course_time, c.course_state,t.tea_name
+    from ic_course c LEFT JOIN ic_teacher t ON c.course_tea_id=t.tea_id
+    <where>
+    	
+    		c.course_state ='1'
+    	
+    </where>
+    limit #{startRow},#{size}
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gch.choose.pojo.IcCourseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ic_course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ic_course
+    where course_id = #{courseId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    
+    delete from ic_course
+    <where>course_id = #{courseId,jdbcType=BIGINT}</where> 
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gch.choose.pojo.IcCourseExample" >
+    delete from ic_course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gch.choose.pojo.IcCourse" >
+    <selectKey keyProperty="courseId" order="AFTER" resultType="Long">
+    	SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ic_course (course_name, course_tea_id, 
+      course_classroom, course_credit, course_date, 
+      course_time, course_state)
+    values ( #{courseName,jdbcType=VARCHAR}, #{courseTeaId,jdbcType=BIGINT}, 
+      #{courseClassroom,jdbcType=INTEGER}, #{courseCredit,jdbcType=INTEGER}, #{courseDate,jdbcType=VARCHAR}, 
+      #{courseTime,jdbcType=VARCHAR}, 1)
+  </insert>
+  <insert id="insertSelective" parameterType="com.gch.choose.pojo.IcCourse" >
+    insert into ic_course
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="courseName != null" >
+        course_name,
+      </if>
+      <if test="courseTeaId != null" >
+        course_tea_id,
+      </if>
+      <if test="courseClassroom != null" >
+        course_classroom,
+      </if>
+      <if test="courseCredit != null" >
+        course_credit,
+      </if>
+      <if test="courseDate != null" >
+        course_date,
+      </if>
+      <if test="courseTime != null" >
+        course_time,
+      </if>
+      <if test="courseState != null" >
+        course_state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="courseId != null" >
+        #{courseId,jdbcType=BIGINT},
+      </if>
+      <if test="courseName != null" >
+        #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="courseTeaId != null" >
+        #{courseTeaId,jdbcType=BIGINT},
+      </if>
+      <if test="courseClassroom != null" >
+        #{courseClassroom,jdbcType=INTEGER},
+      </if>
+      <if test="courseCredit != null" >
+        #{courseCredit,jdbcType=INTEGER},
+      </if>
+      <if test="courseDate != null" >
+        #{courseDate,jdbcType=VARCHAR},
+      </if>
+      <if test="courseTime != null" >
+        #{courseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="courseState != null" >
+        #{courseState,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gch.choose.pojo.IcCourseExample" resultType="java.lang.Integer" >
+    select count(*) from ic_course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ic_course
+    <set >
+      <if test="record.courseId != null" >
+        course_id = #{record.courseId,jdbcType=BIGINT},
+      </if>
+      <if test="record.courseName != null" >
+        course_name = #{record.courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseTeaId != null" >
+        course_tea_id = #{record.courseTeaId,jdbcType=BIGINT},
+      </if>
+      <if test="record.courseClassroom != null" >
+        course_classroom = #{record.courseClassroom,jdbcType=INTEGER},
+      </if>
+      <if test="record.courseCredit != null" >
+        course_credit = #{record.courseCredit,jdbcType=INTEGER},
+      </if>
+      <if test="record.courseDate != null" >
+        course_date = #{record.courseDate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseTime != null" >
+        course_time = #{record.courseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.courseState != null" >
+        course_state = #{record.courseState,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ic_course
+    set course_id = #{record.courseId,jdbcType=BIGINT},
+      course_name = #{record.courseName,jdbcType=VARCHAR},
+      course_tea_id = #{record.courseTeaId,jdbcType=BIGINT},
+      course_classroom = #{record.courseClassroom,jdbcType=INTEGER},
+      course_credit = #{record.courseCredit,jdbcType=INTEGER},
+      course_date = #{record.courseDate,jdbcType=VARCHAR},
+      course_time = #{record.courseTime,jdbcType=VARCHAR},
+      course_state = #{record.courseState,jdbcType=CHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gch.choose.pojo.IcCourse" >
+    update ic_course
+    <set >
+      <if test="courseName != null" >
+        course_name = #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="courseTeaId != null" >
+        course_tea_id = #{courseTeaId,jdbcType=BIGINT},
+      </if>
+      <if test="courseClassroom != null" >
+        course_classroom = #{courseClassroom,jdbcType=INTEGER},
+      </if>
+      <if test="courseCredit != null" >
+        course_credit = #{courseCredit,jdbcType=INTEGER},
+      </if>
+      <if test="courseDate != null" >
+        course_date = #{courseDate,jdbcType=VARCHAR},
+      </if>
+      <if test="courseTime != null" >
+        course_time = #{courseTime,jdbcType=VARCHAR},
+      </if>
+      <if test="courseState != null" >
+        course_state = #{courseState,jdbcType=CHAR},
+      </if>
+    </set>
+    where course_id = #{courseId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gch.choose.pojo.IcCourse" >
+    update ic_course
+    set course_name = #{courseName,jdbcType=VARCHAR},
+      course_tea_id = #{courseTeaId,jdbcType=BIGINT},
+      course_classroom = #{courseClassroom,jdbcType=INTEGER},
+      course_credit = #{courseCredit,jdbcType=INTEGER},
+      course_date = #{courseDate,jdbcType=VARCHAR},
+      course_time = #{courseTime,jdbcType=VARCHAR},
+      course_state = #{courseState,jdbcType=CHAR}
+    where course_id = #{courseId,jdbcType=BIGINT}
+  </update>
+</mapper>

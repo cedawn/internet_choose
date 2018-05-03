@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gch.choose.mapper.IcManagerMapper" >
+  <resultMap id="BaseResultMap" type="com.gch.choose.pojo.IcManager" >
+    <id column="man_id" property="manId" jdbcType="BIGINT" />
+    <result column="man_username" property="manUsername" jdbcType="VARCHAR" />
+    <result column="man_turename" property="manTurename" jdbcType="VARCHAR" />
+    <result column="man_password" property="manPassword" jdbcType="VARCHAR" />
+    <result column="man_createtime" property="manCreatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    man_id, man_username, man_turename, man_password, man_createtime
+  </sql>
+  <select id="selectIcMangerByIDPassword" parameterType="QueryVo" resultMap="BaseResultMap">
+  	select * from ic_manager 
+  	<where>
+  	man_username=#{userID}
+  	</where>
+  
+  </select>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gch.choose.pojo.IcManagerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ic_manager
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ic_manager
+    where man_id = #{manId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ic_manager
+    where man_id = #{manId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gch.choose.pojo.IcManagerExample" >
+    delete from ic_manager
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gch.choose.pojo.IcManager" >
+    insert into ic_manager (man_id, man_username, man_turename, 
+      man_password, man_createtime)
+    values (#{manId,jdbcType=BIGINT}, #{manUsername,jdbcType=VARCHAR}, #{manTurename,jdbcType=VARCHAR}, 
+      #{manPassword,jdbcType=BIGINT}, #{manCreatetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gch.choose.pojo.IcManager" >
+    insert into ic_manager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="manId != null" >
+        man_id,
+      </if>
+      <if test="manUsername != null" >
+        man_username,
+      </if>
+      <if test="manTurename != null" >
+        man_turename,
+      </if>
+      <if test="manPassword != null" >
+        man_password,
+      </if>
+      <if test="manCreatetime != null" >
+        man_createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="manId != null" >
+        #{manId,jdbcType=BIGINT},
+      </if>
+      <if test="manUsername != null" >
+        #{manUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="manTurename != null" >
+        #{manTurename,jdbcType=VARCHAR},
+      </if>
+      <if test="manPassword != null" >
+        #{manPassword,jdbcType=BIGINT},
+      </if>
+      <if test="manCreatetime != null" >
+        #{manCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gch.choose.pojo.IcManagerExample" resultType="java.lang.Integer" >
+    select count(*) from ic_manager
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ic_manager
+    <set >
+      <if test="record.manId != null" >
+        man_id = #{record.manId,jdbcType=BIGINT},
+      </if>
+      <if test="record.manUsername != null" >
+        man_username = #{record.manUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manTurename != null" >
+        man_turename = #{record.manTurename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manPassword != null" >
+        man_password = #{record.manPassword,jdbcType=BIGINT},
+      </if>
+      <if test="record.manCreatetime != null" >
+        man_createtime = #{record.manCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ic_manager
+    set man_id = #{record.manId,jdbcType=BIGINT},
+      man_username = #{record.manUsername,jdbcType=VARCHAR},
+      man_turename = #{record.manTurename,jdbcType=VARCHAR},
+      man_password = #{record.manPassword,jdbcType=BIGINT},
+      man_createtime = #{record.manCreatetime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gch.choose.pojo.IcManager" >
+    update ic_manager
+    <set >
+      <if test="manUsername != null" >
+        man_username = #{manUsername,jdbcType=VARCHAR},
+      </if>
+      <if test="manTurename != null" >
+        man_turename = #{manTurename,jdbcType=VARCHAR},
+      </if>
+      <if test="manPassword != null" >
+        man_password = #{manPassword,jdbcType=BIGINT},
+      </if>
+      <if test="manCreatetime != null" >
+        man_createtime = #{manCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where man_id = #{manId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gch.choose.pojo.IcManager" >
+    update ic_manager
+    set man_username = #{manUsername,jdbcType=VARCHAR},
+      man_turename = #{manTurename,jdbcType=VARCHAR},
+      man_password = #{manPassword,jdbcType=BIGINT},
+      man_createtime = #{manCreatetime,jdbcType=TIMESTAMP}
+    where man_id = #{manId,jdbcType=BIGINT}
+  </update>
+</mapper>

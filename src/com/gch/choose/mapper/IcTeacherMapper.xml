@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gch.choose.mapper.IcTeacherMapper" >
+   
+   
+   <select id="selectCountByTeaNumber" parameterType="String" resultType="int">
+   	select count(*) from ic_teacher 
+   	<where>
+   		tea_number=#{teaNumber}
+   	</where>
+   </select>
+   <select id="selectIcTeacherByIDPassword" parameterType="QueryVo" resultType="IcTeacher">
+   	select * from ic_teacher
+   	<where>
+   		tea_number=#{userID}
+   	</where>
+   
+   </select>
+   <select id="selectTeacherName" resultType="IcTeacher">
+  	select tea_id,tea_name from ic_teacher
+  	</select>
+   <update id="updateTeacherByTeaId" parameterType="IcTeacher">
+   	update ic_teacher
+   	<set>
+   		<if test="tea_name!=null">
+  			tea_name=#{tea_name},
+  		</if>
+  		<if test="tea_number!=null">
+  			tea_number=#{tea_number},
+  		</if>
+  		<if test="tea_sex!=null">
+  			tea_sex=#{tea_sex},
+  		</if>
+  		<if test="tea_password!=null">
+  			tea_password=#{tea_password},
+  		</if>
+  		<if test="tea_email!=null">
+  			tea_email=#{tea_email},
+  		</if>
+  		<if test="tea_mobile!=null">
+  			tea_mobile=#{tea_mobile},
+  		</if>
+   	</set>
+   	<where>
+   		tea_id=#{tea_id}
+   	</where>
+   </update>
+   
+   <select id="icTeacherCountByQueryVo"  parameterType="QueryVo" resultType="Integer">
+  	select count(1) from ic_teacher
+  	<where>
+  		<if test="teaName !=null and teaName!=''">
+  			tea_name like "%"#{teaName}"%"
+  		</if>
+  		<if test="teaNumber !=null and teaNumber!=''">
+  			and tea_number like "%"#{teaNumber}"%"
+  		</if>
+  	</where>
+  
+  </select>
+  <select id="selectTeacherByQueryVo" parameterType="QueryVo" resultType="IcTeacher">
+  	select * from ic_teacher
+  	<where>
+  		<if test="teaName !=null and teaName!=''">
+  			tea_name like "%"#{teaName}"%"
+  		</if>
+  		<if test="teaNumber !=null and teaNumber!=''">
+  			and tea_number like "%"#{teaNumber}"%"
+  		</if>
+  	</where>
+  	limit #{startRow},#{size}
+  </select>
+  <resultMap id="BaseResultMap" type="com.gch.choose.pojo.IcTeacher" >
+    <id column="tea_id" property="teaId" jdbcType="BIGINT" />
+    <result column="tea_name" property="teaName" jdbcType="VARCHAR" />
+    <result column="tea_sex" property="teaSex" jdbcType="VARCHAR" />
+    <result column="tea_number" property="teaNumber" jdbcType="BIGINT" />
+    <result column="tea_password" property="teaPassword" jdbcType="BIGINT" />
+    <result column="tea_email" property="teaEmail" jdbcType="VARCHAR" />
+    <result column="tea_mobile" property="teaMobile" jdbcType="VARCHAR" />
+    <result column="tea_zipcode" property="teaZipcode" jdbcType="VARCHAR" />
+    <result column="tea_address" property="teaAddress" jdbcType="VARCHAR" />
+    <result column="tea_createtime" property="teaCreatetime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    tea_id, tea_name, tea_sex, tea_number, tea_password, tea_email, tea_mobile, tea_zipcode, 
+    tea_address, tea_createtime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gch.choose.pojo.IcTeacherExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ic_teacher
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultType="IcTeacher" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from ic_teacher
+    where tea_id = #{tea_id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from ic_teacher
+    where tea_id = #{teaId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gch.choose.pojo.IcTeacherExample" >
+    delete from ic_teacher
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gch.choose.pojo.IcTeacher" >
+  <selectKey keyProperty="tea_id" resultType="Long" order="AFTER">
+  	SELECT LAST_INSERT_ID()
+  </selectKey>
+    insert into ic_teacher (tea_name, tea_sex, 
+      tea_number, tea_password, tea_email, 
+      tea_mobile, tea_zipcode, tea_address, 
+      tea_createtime)
+    values ( #{tea_name,jdbcType=VARCHAR}, #{tea_sex,jdbcType=VARCHAR}, 
+      #{tea_number,jdbcType=BIGINT}, #{tea_password,jdbcType=BIGINT}, #{tea_email,jdbcType=VARCHAR}, 
+      #{tea_mobile,jdbcType=VARCHAR}, #{tea_zipcode,jdbcType=VARCHAR}, #{tea_address,jdbcType=VARCHAR}, 
+      #{tea_createtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gch.choose.pojo.IcTeacher" >
+    insert into ic_teacher
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="teaId != null" >
+        tea_id,
+      </if>
+      <if test="teaName != null" >
+        tea_name,
+      </if>
+      <if test="teaSex != null" >
+        tea_sex,
+      </if>
+      <if test="teaNumber != null" >
+        tea_number,
+      </if>
+      <if test="teaPassword != null" >
+        tea_password,
+      </if>
+      <if test="teaEmail != null" >
+        tea_email,
+      </if>
+      <if test="teaMobile != null" >
+        tea_mobile,
+      </if>
+      <if test="teaZipcode != null" >
+        tea_zipcode,
+      </if>
+      <if test="teaAddress != null" >
+        tea_address,
+      </if>
+      <if test="teaCreatetime != null" >
+        tea_createtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="teaId != null" >
+        #{teaId,jdbcType=BIGINT},
+      </if>
+      <if test="teaName != null" >
+        #{teaName,jdbcType=VARCHAR},
+      </if>
+      <if test="teaSex != null" >
+        #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaNumber != null" >
+        #{teaNumber,jdbcType=BIGINT},
+      </if>
+      <if test="teaPassword != null" >
+        #{teaPassword,jdbcType=BIGINT},
+      </if>
+      <if test="teaEmail != null" >
+        #{teaEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="teaMobile != null" >
+        #{teaMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="teaZipcode != null" >
+        #{teaZipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAddress != null" >
+        #{teaAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="teaCreatetime != null" >
+        #{teaCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gch.choose.pojo.IcTeacherExample" resultType="java.lang.Integer" >
+    select count(*) from ic_teacher
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ic_teacher
+    <set >
+      <if test="record.teaId != null" >
+        tea_id = #{record.teaId,jdbcType=BIGINT},
+      </if>
+      <if test="record.teaName != null" >
+        tea_name = #{record.teaName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaSex != null" >
+        tea_sex = #{record.teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaNumber != null" >
+        tea_number = #{record.teaNumber,jdbcType=BIGINT},
+      </if>
+      <if test="record.teaPassword != null" >
+        tea_password = #{record.teaPassword,jdbcType=BIGINT},
+      </if>
+      <if test="record.teaEmail != null" >
+        tea_email = #{record.teaEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaMobile != null" >
+        tea_mobile = #{record.teaMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaZipcode != null" >
+        tea_zipcode = #{record.teaZipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaAddress != null" >
+        tea_address = #{record.teaAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.teaCreatetime != null" >
+        tea_createtime = #{record.teaCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ic_teacher
+    set tea_id = #{record.teaId,jdbcType=BIGINT},
+      tea_name = #{record.teaName,jdbcType=VARCHAR},
+      tea_sex = #{record.teaSex,jdbcType=VARCHAR},
+      tea_number = #{record.teaNumber,jdbcType=BIGINT},
+      tea_password = #{record.teaPassword,jdbcType=BIGINT},
+      tea_email = #{record.teaEmail,jdbcType=VARCHAR},
+      tea_mobile = #{record.teaMobile,jdbcType=VARCHAR},
+      tea_zipcode = #{record.teaZipcode,jdbcType=VARCHAR},
+      tea_address = #{record.teaAddress,jdbcType=VARCHAR},
+      tea_createtime = #{record.teaCreatetime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gch.choose.pojo.IcTeacher" >
+    update ic_teacher
+    <set >
+      <if test="teaName != null" >
+        tea_name = #{teaName,jdbcType=VARCHAR},
+      </if>
+      <if test="teaSex != null" >
+        tea_sex = #{teaSex,jdbcType=VARCHAR},
+      </if>
+      <if test="teaNumber != null" >
+        tea_number = #{teaNumber,jdbcType=BIGINT},
+      </if>
+      <if test="teaPassword != null" >
+        tea_password = #{teaPassword,jdbcType=BIGINT},
+      </if>
+      <if test="teaEmail != null" >
+        tea_email = #{teaEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="teaMobile != null" >
+        tea_mobile = #{teaMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="teaZipcode != null" >
+        tea_zipcode = #{teaZipcode,jdbcType=VARCHAR},
+      </if>
+      <if test="teaAddress != null" >
+        tea_address = #{teaAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="teaCreatetime != null" >
+        tea_createtime = #{teaCreatetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where tea_id = #{teaId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gch.choose.pojo.IcTeacher" >
+    update ic_teacher
+    set tea_name = #{teaName,jdbcType=VARCHAR},
+      tea_sex = #{teaSex,jdbcType=VARCHAR},
+      tea_number = #{teaNumber,jdbcType=BIGINT},
+      tea_password = #{teaPassword,jdbcType=BIGINT},
+      tea_email = #{teaEmail,jdbcType=VARCHAR},
+      tea_mobile = #{teaMobile,jdbcType=VARCHAR},
+      tea_zipcode = #{teaZipcode,jdbcType=VARCHAR},
+      tea_address = #{teaAddress,jdbcType=VARCHAR},
+      tea_createtime = #{teaCreatetime,jdbcType=TIMESTAMP}
+    where tea_id = #{teaId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gch.choose.mapper.IcStudentCourseMapper" >
+  <resultMap id="BaseResultMap" type="com.gch.choose.pojo.IcStudentCourse" >
+    <id column="isc_id" property="iscId" jdbcType="BIGINT" />
+    <id column="isc_studentId" property="iscStudentid" jdbcType="BIGINT" />
+    <id column="isc_courseId" property="iscCourseid" jdbcType="BIGINT" />
+    <result column="isc_score" property="iscScore" jdbcType="INTEGER" />
+  	<result column="stu_name" property="stu_name" jdbcType="VARCHAR" />
+  	 <result column="stu_number" property="stu_number" jdbcType="BIGINT" />
+  	<collection property="student" resultMap="StudentResultWithCourse" ></collection>
+  </resultMap>
+  
+  <resultMap id="StudentResultMap" type="com.gch.choose.pojo.IcStudent" >
+    <id column="stu_id" property="stu_id" jdbcType="BIGINT" />
+    <result column="stu_name" property="stu_name" jdbcType="VARCHAR" />
+    <result column="stu_sex" property="stu_sex" jdbcType="VARCHAR" />
+    <result column="stu_number" property="stu_number" jdbcType="BIGINT" />
+    <result column="stu_sorting" property="stu_sorting" jdbcType="VARCHAR" />
+    <result column="stu_professional" property="stu_professional" jdbcType="VARCHAR" />
+    <result column="stu_course_id" property="stu_course_id" jdbcType="BIGINT" />
+    <result column="stu_password" property="stu_password" jdbcType="BIGINT" />
+    <result column="stu_email" property="stu_email" jdbcType="VARCHAR" />
+    <result column="stu_mobile" property="stu_mobile" jdbcType="VARCHAR" />
+    <result column="stu_zipcode" property="stu_zipcode" jdbcType="VARCHAR" />
+    <result column="stu_address" property="stu_address" jdbcType="VARCHAR" />
+    <result column="stu_createtime" property="stu_createtime" jdbcType="TIMESTAMP" />
+  	<association property="icStudentCourse" javaType="IcStudentCourse">
+  	
+  	 <result column="isc_score" property="iscScore" jdbcType="INTEGER" />
+  	</association>
+  
+  </resultMap>
+  <resultMap type="com.gch.choose.pojo.IcStudent" id="StudentResultWithCourse" extends="StudentResultMap">
+  		<collection property="courses" resultMap="CourseResult"></collection>
+  
+  </resultMap>
+  <resultMap id="CourseResult" type="com.gch.choose.pojo.IcCourse" >
+    <id column="course_id" property="courseId" jdbcType="BIGINT" />
+    <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+    <result column="course_tea_id" property="courseTeaId" jdbcType="BIGINT" />
+    <result column="course_classroom" property="courseClassroom" jdbcType="INTEGER" />
+    <result column="course_credit" property="courseCredit" jdbcType="INTEGER" />
+    <result column="course_date" property="courseDate" jdbcType="VARCHAR" />
+    <result column="course_time" property="courseTime" jdbcType="VARCHAR" />
+    <result column="course_state" property="courseState" jdbcType="CHAR" />
+  	<association property="icteacher" javaType="icteacher">
+  	 <id property="tea_id" column="course_tea_id"/>
+  	 <result property="tea_name" column="tea_name"/>
+  	</association>
+  </resultMap>
+ 	<select id="selectNeedGrade" parameterType="com.gch.choose.pojo.IcCourse" resultMap="BaseResultMap">
+ 		select sc.isc_id, s.stu_name,s.stu_number,c.course_id,c.course_name,sc.isc_score
+	FROM ic_student s,ic_course c,ic_student_course sc,ic_teacher t
+	<where> t.tea_id=#{param1.tea_id}
+	and c.course_id=#{param2.courseId}
+	and c.course_tea_id=t.tea_id
+	and sc.isc_courseId=c.course_id
+	and s.stu_id=sc.isc_studentId
+	</where>
+ 	</select>
+ 	<select id="selectAllStudentByCTid" parameterType="com.gch.choose.pojo.IcCourse" resultMap="StudentResultMap">
+  		select 
+
+		s.stu_id,s.stu_name,s.stu_sex,s.stu_number,s.stu_email,s.stu_mobile
+		FROM ic_student s,ic_course c,ic_student_course sc,ic_teacher t
+		<where> t.tea_id=#{param1.tea_id}
+		and c.course_id=#{param2.courseId}
+		and c.course_tea_id=t.tea_id
+		and sc.isc_courseId=c.course_id
+		and s.stu_id=sc.isc_studentId
+  		</where>
+  </select>
+ <update id="updateByIscId" parameterType="QueryVo">
+ 	update ic_student_course
+ 	<set>
+ 		<if test="iscScore !=null">
+ 			isc_score=#{iscScore}
+ 		</if>
+ 	</set>
+ 	<where>
+ 		isc_id=#{iscId}
+ 	</where>
+ </update>
+  <delete id="deleteISCById" parameterType="Long">
+  		delete from ic_student_course 
+  		<where>
+  			isc_courseId=#{c_id}
+  		</where>
+  
+  </delete>
+  <insert id="insertByCidSid" parameterType="com.gch.choose.pojo.IcStudentCourse">
+  	<selectKey keyProperty="iscId" order="AFTER" resultType="Long">
+  		SELECT LAST_INSERT_ID()
+  	</selectKey>
+  	insert into ic_student_course(isc_courseId,isc_studentId)
+  		 
+  		values(#{param1.courseId},#{param2.stu_id})
+  		
+  </insert>
+  <select id="selectAllCourseByStuId" parameterType="Long" resultMap="BaseResultMap">
+  	select 
+  	c.course_name,t.tea_name,c.course_credit,c.course_id,sc.isc_score
+  	from ic_student s,ic_course c,ic_student_course sc,ic_teacher t
+  	<where>
+  		s.stu_id=#{s_id}
+  		and sc.isc_studentId=s.stu_id
+  	
+  		and c.course_id=sc.isc_courseID
+  		
+  		and c.course_tea_id=t.tea_id
+  	</where>
+  
+  </select>
+  
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  
+  <sql id="Base_Column_List" >
+    isc_id, isc_studentId, isc_courseId, isc_score
+  </sql>
+  
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gch.choose.pojo.IcStudentCourseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ic_student_course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.gch.choose.pojo.IcStudentCourseKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from ic_student_course
+    where isc_id = #{iscId,jdbcType=BIGINT}
+      and isc_studentId = #{iscStudentid,jdbcType=BIGINT}
+      and isc_courseId = #{iscCourseid,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.gch.choose.pojo.IcStudentCourseKey" >
+    delete from ic_student_course
+    where isc_id = #{iscId,jdbcType=BIGINT}
+      and isc_studentId = #{iscStudentid,jdbcType=BIGINT}
+      and isc_courseId = #{iscCourseid,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.gch.choose.pojo.IcStudentCourseExample" >
+    delete from ic_student_course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.gch.choose.pojo.IcStudentCourse" >
+    insert into ic_student_course (isc_id, isc_studentId, isc_courseId, 
+      isc_score)
+    values (#{iscId,jdbcType=BIGINT}, #{iscStudentid,jdbcType=BIGINT}, #{iscCourseid,jdbcType=BIGINT}, 
+      #{iscScore,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gch.choose.pojo.IcStudentCourse" >
+    insert into ic_student_course
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="iscId != null" >
+        isc_id,
+      </if>
+      <if test="iscStudentid != null" >
+        isc_studentId,
+      </if>
+      <if test="iscCourseid != null" >
+        isc_courseId,
+      </if>
+      <if test="iscScore != null" >
+        isc_score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="iscId != null" >
+        #{iscId,jdbcType=BIGINT},
+      </if>
+      <if test="iscStudentid != null" >
+        #{iscStudentid,jdbcType=BIGINT},
+      </if>
+      <if test="iscCourseid != null" >
+        #{iscCourseid,jdbcType=BIGINT},
+      </if>
+      <if test="iscScore != null" >
+        #{iscScore,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.gch.choose.pojo.IcStudentCourseExample" resultType="java.lang.Integer" >
+    select count(*) from ic_student_course
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ic_student_course
+    <set >
+      <if test="record.iscId != null" >
+        isc_id = #{record.iscId,jdbcType=BIGINT},
+      </if>
+      <if test="record.iscStudentid != null" >
+        isc_studentId = #{record.iscStudentid,jdbcType=BIGINT},
+      </if>
+      <if test="record.iscCourseid != null" >
+        isc_courseId = #{record.iscCourseid,jdbcType=BIGINT},
+      </if>
+      <if test="record.iscScore != null" >
+        isc_score = #{record.iscScore,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ic_student_course
+    set isc_id = #{record.iscId,jdbcType=BIGINT},
+      isc_studentId = #{record.iscStudentid,jdbcType=BIGINT},
+      isc_courseId = #{record.iscCourseid,jdbcType=BIGINT},
+      isc_score = #{record.iscScore,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gch.choose.pojo.IcStudentCourse" >
+    update ic_student_course
+    <set >
+      <if test="iscScore != null" >
+        isc_score = #{iscScore,jdbcType=INTEGER},
+      </if>
+    </set>
+    where isc_id = #{iscId,jdbcType=BIGINT}
+      and isc_studentId = #{iscStudentid,jdbcType=BIGINT}
+      and isc_courseId = #{iscCourseid,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gch.choose.pojo.IcStudentCourse" >
+    update ic_student_course
+    set isc_score = #{iscScore,jdbcType=INTEGER}
+    where isc_id = #{iscId,jdbcType=BIGINT}
+      and isc_studentId = #{iscStudentid,jdbcType=BIGINT}
+      and isc_courseId = #{iscCourseid,jdbcType=BIGINT}
+  </update>
+</mapper>
