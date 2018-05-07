@@ -7,6 +7,7 @@
     <result column="man_turename" property="manTurename" jdbcType="VARCHAR" />
     <result column="man_password" property="manPassword" jdbcType="VARCHAR" />
     <result column="man_createtime" property="manCreatetime" jdbcType="TIMESTAMP" />
+    <result column="man_state" property="manState" jdbcType="CHAR"/>
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -66,16 +67,50 @@
       </foreach>
     </where>
   </sql>
+  
   <sql id="Base_Column_List" >
     man_id, man_username, man_turename, man_password, man_createtime
   </sql>
+  <select id="selectAllManager" resultMap="BaseResultMap">
+  	select * from ic_manager
+  
+  </select>
   <select id="selectIcMangerByIDPassword" parameterType="QueryVo" resultMap="BaseResultMap">
   	select * from ic_manager 
   	<where>
   	man_username=#{userID}
-  	</where>
-  
+  	</where> 
   </select>
+  <update id="updateManager" parameterType="com.gch.choose.pojo.IcManager">
+  	update ic_manager
+  	<set>
+  		<if test="manUsername !=null">
+  		man_username= #{manUsername},
+  		</if>
+  		<if test="manTurename !=null">
+  		man_turename= #{manTurename},
+  		</if>
+  		<if test="manPassword !=null">
+  		man_password= #{manPassword}
+  		</if>
+  	</set>
+  	<where>
+  		man_id=#{manId}
+  	</where>
+  </update>
+  <select id="selectManagerById" parameterType="Long" resultMap="BaseResultMap">
+  	select * from ic_manager
+  	<where>
+  		man_id=#{id}
+  	</where>  
+  </select>
+  <insert id="insertManager" parameterType="com.gch.choose.pojo.IcManager">
+  	<selectKey keyProperty="manId" order="AFTER" resultType="Long">
+    	SELECT LAST_INSERT_ID()
+    </selectKey>
+  	insert into ic_manager (man_username, man_turename, man_password,man_state)
+  	values ( #{manUsername}, #{manTurename}, #{manPassword}, 1)
+  </insert>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.gch.choose.pojo.IcManagerExample" >
     select
     <if test="distinct" >

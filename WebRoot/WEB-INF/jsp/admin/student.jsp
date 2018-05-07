@@ -63,7 +63,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<!-- /.row -->
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<form class="form-inline" action="${pageContext.request.contextPath }/admin/student.action" method="post">
+					<form class="form-inline" action="${pageContext.request.contextPath }/admin/student" method="post">
 						<div class="form-group">
 							<label for="stuName">学生姓名</label> 
 							<input type="text" class="form-control" id="stuName" value="${stuName }" name="stuName">
@@ -73,7 +73,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<input type="text" class="form-control" id="stuNumber" value="${stuNumber }" name="stuNumber">
 						</div>
 						<button type="submit" class="btn btn-primary">查询</button>
-						<a href="#" class="btn btn-primary " data-toggle="modal" data-target="#studentInsertDialog" >添加</a>
+						<a href="javascript:void(0);" class="btn btn-primary " data-toggle="modal" data-target="#studentInsertDialog" >添加</a>
 					</form>
 				</div>
 			</div>
@@ -104,7 +104,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										<td>${row.stu_email}</td>
 										<td>${row.stu_mobile}</td>
 										<td>
-											<a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#studentEditDialog" onclick="editStudent('${row.stu_id}')">修改</a>
+											<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#studentEditDialog" onclick="editStudent('${row.stu_id}')">修改</a>
 											<a  class="btn btn-danger btn-xs" onclick="deleteStudent('${row.stu_id}')">删除</a>
 										</td>
 									</tr>
@@ -112,7 +112,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</tbody>
 						</table>
 						<div class="col-md-12 text-right">
-							<itheima:page url="${pageContext.request.contextPath }/admin/student.action" />
+							<itheima:page url="${pageContext.request.contextPath }/admin/student" />
 						</div>
 						<!-- /.panel-body -->
 					</div>
@@ -188,7 +188,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-			<form class="form-horizontal" id="insert_student_form" action="<%=basePath%>admin/student/insert.action" method="post">
+			<form class="form-horizontal" id="insert_student_form" action="<%=basePath%>admin/student/insert" method="post">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -264,7 +264,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		function editStudent(id) {
 			$.ajax({
 				type:"get",
-				url:"<%=basePath%>admin/student/edit.action",
+				url:"<%=basePath%>admin/student/edit",
 				data:{"id":id},
 				success:function(data) {  
 					$("#edit_stu_id").val(data.stu_id);
@@ -285,14 +285,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 		} --%>
 		function updateStudent() {
-			$.post("<%=basePath%>admin/student/update.action",$("#edit_student_form").serialize(),function(data){
+			$.post("<%=basePath%>admin/student/update",$("#edit_student_form").serialize(),function(data){
 				alert("学生信息更新成功！");
 				window.location.reload();
 			});
 		}
 		function deleteStudent(id) {
 			if(confirm('确实要删除该学生吗?')) {
-				$.post("<%=basePath%>admin/student/delete.action",{"id":id},function(data){
+				$.post("<%=basePath%>admin/student/delete",{"id":id},function(data){
 					alert("学生删除更新成功！");
 					window.location.reload();
 				});

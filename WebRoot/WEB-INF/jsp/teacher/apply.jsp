@@ -57,7 +57,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="row">
 				<div class="col-lg-12">
 					<h1 >课程申请</h1>
-					<a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#courseApplyDialog" >申请表</a>
+					<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#courseApplyDialog" >申请表</a>
 				</div>
 				<!-- /.col-lg-12 -->
 			</div>
@@ -87,7 +87,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										<td>${row.courseCredit}</td>
 										<td>
 											
-											<a href="#" class="btn btn-danger btn-xs" onclick="deleteCourse('${row.courseId}')">撤销申请</a>
+											<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteCourse('${row.courseId}')">撤销申请</a>
 										</td>
 									</tr>
 								</c:forEach>
@@ -96,6 +96,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						
 						<!-- /.panel-body -->
 					</div>
+					<c:if test="${empty cou}"><p align="center" style="font-size:20">未查询到相关记录！</p></c:if>
 					<!-- /.panel -->
 				</div>
 				

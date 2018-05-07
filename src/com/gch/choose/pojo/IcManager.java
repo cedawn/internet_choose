@@ -12,8 +12,16 @@ public class IcManager {
     private String manPassword;
 
     private Date manCreatetime;
+    private Integer manState;
+    public Integer getManState() {
+		return manState;
+	}
 
-    public Long getManId() {
+	public void setManState(Integer manState) {
+		this.manState = manState;
+	}
+
+	public Long getManId() {
         return manId;
     }
 

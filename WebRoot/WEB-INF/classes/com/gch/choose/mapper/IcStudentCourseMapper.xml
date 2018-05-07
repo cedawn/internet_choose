@@ -8,6 +8,8 @@
     <result column="isc_score" property="iscScore" jdbcType="INTEGER" />
   	<result column="stu_name" property="stu_name" jdbcType="VARCHAR" />
   	 <result column="stu_number" property="stu_number" jdbcType="BIGINT" />
+  	 <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+  	 <result column="tea_name" property="tea_name" jdbcType="VARCHAR" />
   	<collection property="student" resultMap="StudentResultWithCourse" ></collection>
   </resultMap>
   
@@ -25,15 +27,12 @@
     <result column="stu_zipcode" property="stu_zipcode" jdbcType="VARCHAR" />
     <result column="stu_address" property="stu_address" jdbcType="VARCHAR" />
     <result column="stu_createtime" property="stu_createtime" jdbcType="TIMESTAMP" />
-  	<association property="icStudentCourse" javaType="IcStudentCourse">
-  	
+  	<association property="icStudentCourse" javaType="IcStudentCourse"> 	
   	 <result column="isc_score" property="iscScore" jdbcType="INTEGER" />
-  	</association>
-  
+  	</association>  
   </resultMap>
   <resultMap type="com.gch.choose.pojo.IcStudent" id="StudentResultWithCourse" extends="StudentResultMap">
   		<collection property="courses" resultMap="CourseResult"></collection>
-  
   </resultMap>
   <resultMap id="CourseResult" type="com.gch.choose.pojo.IcCourse" >
     <id column="course_id" property="courseId" jdbcType="BIGINT" />
@@ -49,6 +48,109 @@
   	 <result property="tea_name" column="tea_name"/>
   	</association>
   </resultMap>
+  <select id="selectChooseResult" parameterType="QueryVo" resultMap="BaseResultMap">
+  	SELECT
+  	isc.isc_id,
+	s.stu_number,
+	s.stu_name,
+	c.course_name,
+	t.tea_name,
+	isc.isc_score
+	FROM
+	ic_student s,
+	ic_course c,
+	ic_student_course isc,
+	ic_teacher t,
+	(
+		SELECT
+			isc_courseId,
+			count(*) isc_studentId
+		FROM
+			ic_student_course
+		GROUP BY
+			isc_courseId
+	) icc
+	<where>
+	icc.isc_courseId = isc.isc_courseId
+	and isc.isc_courseId=c.course_id
+	AND c.course_tea_id = t.tea_id
+	AND isc.isc_studentId = s.stu_id
+	
+  	</where>
+  	
+  	</select>
+  	<select id="selectChooseResultCountByQueryVo" parameterType="QueryVo" resultType="Integer">
+  	SELECT
+	count(*)
+	FROM
+	ic_student s,
+	ic_course c,
+	ic_student_course isc,
+	ic_teacher t,
+	(
+		SELECT
+			isc_courseId,
+			count(*) isc_studentId
+		FROM
+			ic_student_course
+		GROUP BY
+			isc_courseId
+	) icc
+	<where>
+	icc.isc_courseId = isc.isc_courseId
+	and isc.isc_courseId=c.course_id
+	AND c.course_tea_id = t.tea_id
+	AND isc.isc_studentId = s.stu_id
+	<if test="stuNumber !=null and stuNumber!=''">
+  			and s.stu_number like "%"#{stuNumber}"%"
+  	</if>
+	<if test="teaName !=null and teaName!=''">
+  			and t.tea_name like "%"#{teaName}"%"
+  	</if>
+  	<if test="courseName !=null and courseName!=''">
+  			and c.course_name like "%"#{courseName}"%"
+  	</if>
+  	</where>
+  	</select>
+  	<select id="selectChooseResultByQueryVo" parameterType="QueryVo" resultMap="BaseResultMap">
+  	SELECT
+  	isc.isc_id,
+	s.stu_number,
+	s.stu_name,
+	c.course_name,
+	t.tea_name,
+	isc.isc_score
+	FROM
+	ic_student s,
+	ic_course c,
+	ic_student_course isc,
+	ic_teacher t,
+	(
+		SELECT
+			isc_courseId,
+			count(*) isc_studentId
+		FROM
+			ic_student_course
+		GROUP BY
+			isc_courseId
+	) icc
+	<where>
+	icc.isc_courseId = isc.isc_courseId
+	and isc.isc_courseId=c.course_id
+	AND c.course_tea_id = t.tea_id
+	AND isc.isc_studentId = s.stu_id
+	<if test="stuNumber !=null and stuNumber!=''">
+  			and s.stu_number like "%"#{stuNumber}"%"
+  	</if>
+	<if test="teaName !=null and teaName!=''">
+  			and t.tea_name like "%"#{teaName}"%"
+  	</if>
+  	<if test="courseName !=null and courseName!=''">
+  			and c.course_name like "%"#{courseName}"%"
+  	</if>
+  	</where>
+  	limit #{startRow},#{size}
+  	</select>
  	<select id="selectNeedGrade" parameterType="com.gch.choose.pojo.IcCourse" resultMap="BaseResultMap">
  		select sc.isc_id, s.stu_name,s.stu_number,c.course_id,c.course_name,sc.isc_score
 	FROM ic_student s,ic_course c,ic_student_course sc,ic_teacher t

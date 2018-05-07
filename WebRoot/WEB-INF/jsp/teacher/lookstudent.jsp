@@ -89,7 +89,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<itheima:page url="${pageContext.request.contextPath }/customer/list.action" />
 						</div>
 						<!-- /.panel-body -->
+						
 					</div>
+					
 					<!-- /.panel -->
 				</div>
 				<!-- /.col-lg-12 -->

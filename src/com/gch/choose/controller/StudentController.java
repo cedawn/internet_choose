@@ -25,7 +25,7 @@ public class StudentController {
 	@Autowired
 	private CourseService courseService;
 	
-	@RequestMapping(value="/student/choose.action")
+	@RequestMapping(value="/student/choose")
 	public String chooseView(QueryVo vo,Model model,HttpSession session){
 		Page<IcCourse> page=courseService.selectAllCourse(vo);
 		model.addAttribute("page", page);
@@ -54,7 +54,7 @@ public class StudentController {
 		
 		session.setAttribute("icStuCou",icStuCou);*/
 		
-		return "redirect:/student/choose.action";
+		return "redirect:/student/choose";
 	}
 	
 	@RequestMapping(value="/student/choose/deletecourse.action")

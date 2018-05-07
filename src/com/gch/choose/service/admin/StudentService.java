@@ -24,6 +24,7 @@ public interface StudentService {
 	public List<IcStudentCourse> selectNeedGrade(IcTeacher tea, IcCourse cou);
 	public void updateByIscId(QueryVo vo);
 	public boolean checkUsername(String stu_number);
+	public Page<IcStudentCourse> selectChooseResultByQueryVo(QueryVo vo);
 	
 	
 

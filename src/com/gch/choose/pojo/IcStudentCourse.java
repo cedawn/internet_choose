@@ -7,7 +7,26 @@ public class IcStudentCourse extends IcStudentCourseKey {
     private String stu_name;
     private String stu_number;
     private IcStudentCourse icStudentCourse;
-    public IcStudentCourse getIcStudentCourse() {
+    private String courseName;
+    private String tea_name;
+    
+    public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public String getTea_name() {
+		return tea_name;
+	}
+
+	public void setTea_name(String tea_name) {
+		this.tea_name = tea_name;
+	}
+
+	public IcStudentCourse getIcStudentCourse() {
 		return icStudentCourse;
 	}
 

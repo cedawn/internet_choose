@@ -18,4 +18,14 @@
         	<property name="prefix" value="/WEB-INF/jsp/"/>
         	<property name="suffix" value=".jsp"/>
         </bean>
+        <mvc:interceptors>
+        <mvc:interceptor>
+			<!-- 配置商品被拦截器拦截 -->
+			<mvc:mapping path="/admin/**" />
+			<mvc:mapping path="/student/**" />
+			<mvc:mapping path="/teacher/**" />
+			<!-- 配置具体的拦截器 -->
+			<bean class="com.gch.common.utils.Interceptor" />
+		</mvc:interceptor>
+		</mvc:interceptors>
 </beans>

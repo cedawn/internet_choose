@@ -1,11 +1,15 @@
 package com.gch.choose.service.others;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import com.gch.choose.mapper.IcManagerMapper;
 import com.gch.choose.mapper.IcStudentMapper;
 import com.gch.choose.mapper.IcTeacherMapper;
+
 import com.gch.choose.pojo.IcManager;
 import com.gch.choose.pojo.IcStudent;
 import com.gch.choose.pojo.IcTeacher;
@@ -33,6 +37,28 @@ public class OthersServiceImp implements OthersService {
 	public IcStudent studentLogin(QueryVo vo) {
 		
 		return icStudentDao.selectIcStudentByIDPassword(vo.getUserID());
+	}
+	@Override
+	public List<IcManager> selectAllManager() {
+		
+		return icManagerDao.selectAllManager();
+	}
+	@Override
+	public void insertManager(IcManager icManager) {
+		icManagerDao.insertManager(icManager);
+	}
+	@Override
+	public IcManager selectManagerById(Long id) {
+		
+		return icManagerDao.selectManagerById(id);
+	}
+	@Override
+	public void updateManager(IcManager icManager) {
+		icManagerDao.updateManager(icManager);
+	}
+	@Override
+	public void deleteManager(Long id) {
+		icManagerDao.deleteByPrimaryKey(id);
 	}
 
 }

@@ -1,4 +1,8 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="itheima" uri="http://itcast.cn/common/"%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -57,17 +61,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</span>
 						</div> <!-- /input-group -->
 					</li>
-					<li><a href="<%=basePath%>/admin/student.action" class="active"><i
+					<li><a href="<%=basePath%>admin/student" class="active"><i
 							class="fa fa-edit fa-fw"></i> 学生管理</a></li>
-					<li><a href="<%=basePath%>/admin/teacher.action" ><i
+					<li><a href="<%=basePath%>admin/teacher" ><i
 							class="fa fa-edit fa-fw"></i> 教师管理</a></li>
-					<li><a href="<%=basePath%>/admin/course.action" ><i
+					<li><a href="<%=basePath%>admin/course" ><i
 							class="fa fa-edit fa-fw"></i> 课程管理</a></li>
-					<li><a href="<%=basePath%>admin/course/nowAgreeCourse.action" ><i
+					<li><a href="<%=basePath%>admin/course/nowAgreeCourse" ><i
 							class="fa fa-edit fa-fw"></i> 课程申请表</a></li>
-					<li><a href="<%=basePath%>admin/course/nowAgreeCourse.action" ><i
+					<li><a href="<%=basePath%>admin/course/chooseResult" ><i
 							class="fa fa-edit fa-fw"></i> 选课结果</a></li>
-					<li><a href="<%=basePath%>exit.action" ><i
+					<c:if test="${icman.manState !='1' }">
+					<li><a href="<%=basePath%>admin/manager" ><i
+							class="fa fa-edit fa-fw"></i> 管理员管理</a></li>
+					</c:if>
+						
+					<li><a href="<%=basePath%>exit" ><i
 							class="fa fa-edit fa-fw"></i> 退出</a></li>
 					
 				</ul>

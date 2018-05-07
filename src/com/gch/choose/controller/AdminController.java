@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gch.choose.pojo.IcCourse;
 import com.gch.choose.pojo.IcStudent;
+import com.gch.choose.pojo.IcStudentCourse;
 import com.gch.choose.pojo.IcTeacher;
 import com.gch.choose.pojo.QueryVo;
 import com.gch.choose.service.admin.CourseService;
@@ -30,7 +31,7 @@ public class AdminController {
 	private TeacherService teacherService;
 	@Autowired
 	private CourseService courseService;
-	@RequestMapping(value="/admin/student.action")
+	@RequestMapping(value="/admin/student")
 	public String student(QueryVo vo,Model model){
 		Page<IcStudent> page=studentService.selectPageByQueryVo(vo);
 		model.addAttribute("page", page);
@@ -38,30 +39,30 @@ public class AdminController {
 		model.addAttribute("stuNumber", vo.getStuNumber());
 		return "admin/student";
 	}
-	@RequestMapping(value="/admin/student/insert.action")
+	@RequestMapping(value="/admin/student/insert")
 	public String insertStudent(IcStudent icStudent){
 		studentService.insertStudent(icStudent);
 		return "redirect:/admin/student.action";
 	}
 	
-	@RequestMapping(value="/admin/student/edit.action")
+	@RequestMapping(value="/admin/student/edit")
 	public @ResponseBody
 	IcStudent editStudent(Long id){
 		return studentService.selectIcStudentById(id);
 	}
-	@RequestMapping(value="admin/student/update.action")
+	@RequestMapping(value="admin/student/update")
 	public @ResponseBody
 	void updateStudent(IcStudent icStudent){
 		studentService.updateIcStudentById(icStudent);
 	}
-	@RequestMapping(value="admin/student/delete.action")
+	@RequestMapping(value="admin/student/delete")
 	public @ResponseBody
 	void deleteStudent(Long id){
 		studentService.deleteIcStudentById(id);
 	}
 	
 	
-	@RequestMapping(value="/admin/teacher.action")
+	@RequestMapping(value="/admin/teacher")
 	public String teacher(QueryVo vo,Model model){
 		Page<IcTeacher> page=teacherService.selectPageByQueryVo(vo);
 		model.addAttribute("page", page);
@@ -69,28 +70,28 @@ public class AdminController {
 		model.addAttribute("teaNumber", vo.getTeaNumber());
 		return "admin/teacher";
 	}
-	@RequestMapping(value="/admin/teacher/insert.action")
+	@RequestMapping(value="/admin/teacher/insert")
 	public String insertTeacher(IcTeacher icTeacher){
 		teacherService.insertTeacher(icTeacher);
 		return "redirect:/admin/teacher.action";
 	}
-	@RequestMapping(value="/admin/teacher/edit.action")
+	@RequestMapping(value="/admin/teacher/edit")
 	public @ResponseBody
 	IcTeacher editTeacher(Long id){
 		return teacherService.selectIcTeacherById(id);
 	}
-	@RequestMapping(value="admin/teacher/update.action")
+	@RequestMapping(value="admin/teacher/update")
 	public @ResponseBody
 	void updateTeacher(IcTeacher icTeacher){
 		teacherService.updateIcTeacherById(icTeacher);
 	}
-	@RequestMapping(value="admin/teacher/delete.action")
+	@RequestMapping(value="admin/teacher/delete")
 	public @ResponseBody
 	void deleteTeacher(Long id){
 		teacherService.deleteTeacherById(id);
 	}
 	
-	 @RequestMapping(value="admin/course.action")
+	 @RequestMapping(value="admin/course")
 	 public String Course(QueryVo vo,Model model){
 		 List<IcTeacher> teacherName = teacherService.selectTeacherName();
 		  model.addAttribute("teacherType", teacherName);
@@ -99,55 +100,61 @@ public class AdminController {
 		 model.addAttribute("courseName", vo.getCourseName());
 		 return "admin/course";
 	 }
-	@RequestMapping(value="/admin/course/insert.action")
+	 @RequestMapping(value="/admin/course/chooseResult")
+	 public String chooseResult(QueryVo vo,Model model){
+		 Page<IcStudentCourse> page=studentService.selectChooseResultByQueryVo(vo);		
+		 model.addAttribute("page", page);				
+		 model.addAttribute("stuNumber", vo.getStuNumber());
+		 model.addAttribute("teaName", vo.getTeaName());
+		 model.addAttribute("courseName", vo.getCourseName());
+		 return "admin/chooseResult";
+	 }
+	@RequestMapping(value="/admin/course/insert")
 	public String insertCourse(IcCourse icCourse){	  
 		 courseService.insertCourse(icCourse);
 			return "redirect:/admin/course.action";
 	}
-	@RequestMapping(value="/admin/course/edit.action")
+	@RequestMapping(value="/admin/course/edit")
 	public @ResponseBody
 	IcCourse editCourse(Long id){
 		return courseService.selectIcCourseById(id);
 	}
-	@RequestMapping(value="/admin/course/update.action")
+	@RequestMapping(value="/admin/course/update")
 	public @ResponseBody
 	void updateCourse(IcCourse icCourse){
 		courseService.updateIcCourse(icCourse);
 	}
-	@RequestMapping(value="/admin/course/delete.action")
+	@RequestMapping(value="/admin/course/delete")
 	public @ResponseBody
 	void deleteCourse(Long id){
 		courseService.deleteCourse(id);
 	}
-	@RequestMapping(value="/admin/course/nowAgreeCourse.action")
+	@RequestMapping(value="/admin/course/nowAgreeCourse")
 	public String nowAgreeCourse(Model model){
 		List<IcCourse> cou=courseService.selectAllStateNullCourse();
 		model.addAttribute("cou", cou);
 		return "admin/applyCourse";
-	}
-	
-	@RequestMapping(value="admin/course/agreeCourse.action")
+	}	
+	@RequestMapping(value="admin/course/agreeCourse")
 	public String agreeCourse(Long id){
 		IcCourse cou = courseService.selectIcCourseById(id);
 		cou.setCourseState("1");
 		courseService.updateIcCourse(cou);
-		return "redirect:/admin/course/nowAgreeCourse.action";
+		return "redirect:/admin/course/nowAgreeCourse";
 	}
-	@RequestMapping(value="admin/course/refuseCourse.action")
+	@RequestMapping(value="admin/course/refuseCourse")
 	public String refuseCourse(Long id){
 			courseService.deleteCourse(id);		
-		return "redirect:/admin/course/nowAgreeCourse.action";		
+		return "redirect:/admin/course/nowAgreeCourse";		
 	}
-	
 	//管理员退出
-	@RequestMapping(value="exit.action")
+	@RequestMapping(value="exit")
 	public String exit(HttpSession session){
 		session.removeAttribute("icman");
 		return "forward:index.jsp";
-	}
-	
-	//检验课程名是否重复
-	@RequestMapping(value="/course/checkClassRoom.action")
+	}	
+	//检验教室是否重复
+	@RequestMapping(value="/course/checkClassRoom")
 	public @ResponseBody
 	String checkClassRoom(String courseClassroom){
 		boolean isExit=true;
@@ -155,4 +162,5 @@ public class AdminController {
 		String json="{\"valid\":"+isExit+"}";
 		return json;
 	}
+	
 }

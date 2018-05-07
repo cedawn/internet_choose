@@ -85,7 +85,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										<td>${row.courseClassroom}</td>
 										<td>${row.courseCredit}</td>
 										<td>
-										<a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#studentEditDialog" onclick="lookStudent('${row.courseId}')">查看学生</a>
+										<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#studentEditDialog" onclick="lookStudent('${row.courseId}')">查看学生</a>
 										<button class="btn btn-primary btn-xs" type="submit">录入成绩</button>
 										</td>
 									</tr>

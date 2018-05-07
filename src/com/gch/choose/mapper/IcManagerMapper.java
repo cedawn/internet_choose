@@ -29,4 +29,12 @@ public interface IcManagerMapper {
     int updateByPrimaryKey(IcManager record);
 
 	IcManager selectIcMangerByIDPassword(String userID);
+
+	List<IcManager> selectAllManager();
+
+	void insertManager(IcManager icManager);
+
+	IcManager selectManagerById(Long id);
+
+	void updateManager(IcManager icManager);
 }

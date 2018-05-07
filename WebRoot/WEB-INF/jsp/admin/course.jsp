@@ -63,7 +63,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<!-- /.row -->
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<form class="form-inline" action="${pageContext.request.contextPath }/admin/course.action" method="post">
+					<form class="form-inline" action="${pageContext.request.contextPath }/admin/course" method="post">
 						<div class="form-group">
 							<label for="courseName">课程名称</label> 
 							<input type="text" class="form-control" id="courseName" value="${courseName }" name="courseName">
@@ -96,15 +96,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										<td>${row.courseClassroom}</td>
 										<td>${row.courseCredit}</td>
 										<td>
-											<a href="#" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#courseEditDialog" onclick="editCourse('${row.courseId}')">修改</a>
-											<a href="#" class="btn btn-danger btn-xs" onclick="deleteCourse('${row.courseId}')">删除</a>
+											<a href="javascript:void(0);" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#courseEditDialog" onclick="editCourse('${row.courseId}')">修改</a>
+											<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteCourse('${row.courseId}')">删除</a>
 										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
 						</table>
 						<div class="col-md-12 text-right">
-							<itheima:page url="${pageContext.request.contextPath }/admin/course.action" />
+							<itheima:page url="${pageContext.request.contextPath }/admin/course" />
 						</div>
 						<!-- /.panel-body -->
 					</div>
@@ -120,7 +120,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		aria-labelledby="myModalLabel">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-			<form class="form-horizontal" id="insert_course_form" action="<%=basePath%>admin/course/insert.action" method="post">
+			<form class="form-horizontal" id="insert_course_form" action="<%=basePath%>admin/course/insert" method="post">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
@@ -249,7 +249,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		function editCourse(id) {
 			$.ajax({
 				type:"get",
-				url:"<%=basePath%>admin/course/edit.action",
+				url:"<%=basePath%>admin/course/edit",
 				data:{"id":id},
 				success:function(data) {  
 					$("#edit_course_id").val(data.courseId);
@@ -269,7 +269,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			});
 		} --%>
 		function updateCourse() {
-			$.post("<%=basePath%>admin/course/update.action",$("#edit_course_form").serialize(),function(data){
+			$.post("<%=basePath%>admin/course/update",$("#edit_course_form").serialize(),function(data){
 				alert("课程信息更新成功！");
 				window.location.reload();
 			});
@@ -277,7 +277,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		function deleteCourse(id) {
 			if(confirm('确实要删除该课程吗?')) {
-				$.post("<%=basePath%>admin/course/delete.action",{"id":id},function(data){
+				$.post("<%=basePath%>admin/course/delete",{"id":id},function(data){
 					alert("课程删除更新成功！");
 					window.location.reload();
 				});

@@ -21,7 +21,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <!-- Bootstrap Core CSS -->
 <link href="<%=basePath%>css/bootstrap.min.css" rel="stylesheet">
-
+<link href="<%=basePath%>css/bootstrapValidator.css" rel="stylesheet">
 <!-- MetisMenu CSS -->
 <link href="<%=basePath%>css/metisMenu.min.css" rel="stylesheet">
 
@@ -67,7 +67,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<div class="panel panel-default">
 						<div class="panel-heading">成绩录入列表</div>
 						<!-- /.panel-heading -->
-						<table class="table table-bordered table-striped">
+						<table class="table table-bordered table-striped" >
 							<thead>
 								<tr>
 									<th>学生学号</th>
@@ -83,23 +83,23 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									
 									<%-- ?id=${bor.courses.courseId}<form method="post" action="choose/deletecourse.action?b_id=${bor.courses.courseId}"> --%>
 									<c:forEach items="${row.student }" var="bor">
-									<form method="post" action="<%=basePath%>teacher/saveGrade.action">
-									<tr>
-										<input type="hidden" value="${row.iscId }" name="iscId">
-										<input type="hidden" value="${bor.courses.courseId }" name="courseId">
-										<td>${row.stu_number }</td>
-										<td>${row.stu_name }</td>
-										
-										<td>${bor.courses.courseName}</td>
-										<td style="width:10px"><input value="${bor.icStudentCourse.iscScore}" <c:if test="${bor.icStudentCourse.iscScore != null}">disabled="true"</c:if> name="iscScore" size="10" id="iscScore"></td>
-										<td>
-										
-										<button class="btn btn-primary btn-xs" <c:if test="${bor.icStudentCourse.iscScore != null}">disabled</c:if> type="submit">录入</button>  
-										<%-- <a href="#" class="btn btn-primary btn-xs"  onclick="saveGrade('${row.iscId }')">录入</a> --%>
-										</td>
-										
-										
-									</tr>
+									<form class="form-horizontal" id="gradeForm"  method="post" action="<%=basePath%>teacher/saveGrade.action">
+										<tr>
+											<input type="hidden" value="${row.iscId }" name="iscId">
+											<input type="hidden" value="${bor.courses.courseId }" name="courseId">
+											<td>${row.stu_number }</td>
+											<td>${row.stu_name }</td>
+											
+											<td>${bor.courses.courseName}</td>
+											<td style="width:100px"><input type="text" class="form-control"  size="10" name="iscScore" value="${bor.icStudentCourse.iscScore}" <c:if test="${row.iscScore != null}">disabled="true"</c:if>  id="iscScore"></td>
+											<td>
+											
+											<button type="submit" class="btn btn-primary btn-xs" <c:if test="${row.iscScore != null}">disabled</c:if> >录入</button>  
+											<%-- <a href="#" class="btn btn-primary btn-xs"  onclick="saveGrade('${row.iscId }')">录入</a> --%>
+											</td>
+											
+											
+										</tr>
 									<!-- </form> -->
 									</form>
 									
@@ -126,7 +126,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	<!-- Bootstrap Core JavaScript -->
 	<script src="<%=basePath%>js/bootstrap.min.js"></script>
-
+	<script src="<%=basePath%>js/bootstrapValidator.js"></script>
 	<!-- Metis Menu Plugin JavaScript -->
 	<script src="<%=basePath%>js/metisMenu.min.js"></script>
 
@@ -149,6 +149,38 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 								
 			});			
 		} --%>
+		
+		$("#gradeForm").bootstrapValidator({
+		          message: 'This value is not valid',
+		          feedbackIcons: {
+		              valid: 'glyphicon glyphicon-ok',
+		              invalid: 'glyphicon glyphicon-remove',
+		              validating: 'glyphicon glyphicon-refresh'
+		          },
+		          fields: {
+		              
+		              iscScore:{
+		              	  message: '学分验证失败',
+		                  validators: {
+		                	  notEmpty: {
+		                          message: '分数不能为空'
+		                      },
+		                      regexp: {
+		                          regexp: /^[1-5]{1}$/,
+		                          message: '分数范围在0-100'
+		                      }
+		                  }
+		              
+		              }
+		             
+		             
+
+		          },
+
+		          submitHandler: function (validator, form, submitButton) {
+		              alert("submit");
+		          }
+		      });
 	</script>
  	</body>
 </html>

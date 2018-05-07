@@ -92,6 +92,28 @@ public class StudentServiceImp implements StudentService {
 		reg=icStudentDao.selectCountByStuNumber(stu_number);
 		return reg>0?false:true;
 	}
+	@Override
+	public Page<IcStudentCourse> selectChooseResultByQueryVo(QueryVo vo) {
+		Page<IcStudentCourse> page = new Page<IcStudentCourse>();
+		page.setSize(5);
+		vo.setSize(5);
+		if(null!= vo){
+			if(null!=vo.getPage()){
+				page.setPage(vo.getPage());
+				vo.setStartRow((vo.getPage()-1)*vo.getSize());
+			}
+			if(null != vo.getStuNumber() && !"".equals(vo.getStuNumber().trim())){
+				vo.setStuNumber(vo.getStuNumber().trim());
+			}if(null !=vo.getTeaName() && !"".equals(vo.getTeaName().trim())){
+				vo.setTeaName(vo.getTeaName().trim());
+			}if(null !=vo.getCourseName() && !"".equals(vo.getCourseName().trim())){
+				vo.setCourseName(vo.getCourseName().trim());
+				}
+			page.setTotal(icStudent_CourseDao.selectChooseResultCountByQueryVo(vo));
+			page.setRows(icStudent_CourseDao.selectChooseResultByQueryVo(vo));
+		}
+		return page;
+	}
 	
 	
 	

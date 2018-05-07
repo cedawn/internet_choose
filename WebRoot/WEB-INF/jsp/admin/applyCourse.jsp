@@ -72,30 +72,34 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<thead>
 								<tr>
 									<th>课程名称</th>
-									
+									<th>教师</th>
 									<th>教室</th>
 									<th>学分</th>
 									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
+								
 								<c:forEach items="${cou}" var="row">
+								
 									<tr>
 										<td>${row.courseName}</td>
-										
+										<td>${row.icteacher.tea_name }</td>
 										<td>${row.courseClassroom}</td>
 										<td>${row.courseCredit}</td>
 										<td>
-											<a href="#" class="btn btn-primary btn-xs" onclick="agreeCourse('${row.courseId}')">同意</a>
-											<a href="#" class="btn btn-danger btn-xs" onclick="refuseCourse('${row.courseId}')">拒绝</a>
+											<a href="javascript:void(0);" class="btn btn-primary btn-xs" onclick="agreeCourse('${row.courseId}')">同意</a>
+											<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="refuseCourse('${row.courseId}')">拒绝</a>
 										</td>
 									</tr>
 								</c:forEach>
 							</tbody>
+							
 						</table>
 						
 						<!-- /.panel-body -->
 					</div>
+					<c:if test="${empty cou}"><p align="center" style="font-size:20">未查询到相关记录！</p></c:if>
 					<!-- /.panel -->
 				</div>
 				
@@ -124,7 +128,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
  	<script type="text/javascript">
 		function agreeCourse(id) {
 			if(confirm('确实要批准该课程吗?')) {
-			$.post("<%=basePath%>admin/course/agreeCourse.action",{"id":id},function(data){
+			$.post("<%=basePath%>admin/course/agreeCourse",{"id":id},function(data){
 				alert("同意课程成功！");
 				window.location.reload();
 			});

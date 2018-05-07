@@ -47,6 +47,14 @@ public interface IcStudentCourseMapper {
 
 	void updateByIscId(QueryVo vo);
 
+	int selectChooseResultCountByQueryVo(QueryVo vo);
+
+	List<IcStudentCourse> selectChooseResultByQueryVo(QueryVo vo);
+
+	List<IcStudentCourse> selectChooseResult();
+
+	
+
 	
 
 	

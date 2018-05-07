@@ -30,7 +30,7 @@ public class TeacherController {
 	private StudentService studentService;
 	@Autowired
 	private TeacherService teacherService;
-	@RequestMapping(value="/teacher/lookCourse.action")
+	@RequestMapping(value="/teacher/lookCourse")
 	public String lookCourse(HttpSession session){
 		IcTeacher tea = (IcTeacher) session.getAttribute("icTeacher");
 		List<IcCourse> allCourse=courseService.selectTeaCourse(tea.getTea_id());	

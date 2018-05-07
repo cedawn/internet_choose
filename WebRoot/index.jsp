@@ -41,7 +41,7 @@
 			<h1>网上选课系统</h1>
 		</div>
 		<div>
-	      <form class="form-signin" method="post" action="<%=basePath%>/login.action" >
+	      <form class="form-signin" method="post" action="<%=basePath%>/login" >
 	        <div class="close"><span><font color="red">${vo.errorMessage }</font></span></div>
 	         <div class="form-group">
                 <label for="userID">用户Id</label>

@@ -71,7 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<!-- /.row -->
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<form class="form-inline" action="${pageContext.request.contextPath }/admin/teacher.action" method="post">
+					<form class="form-inline" action="${pageContext.request.contextPath }/admin/teacher" method="post">
 						<div class="form-group">
 							<label for="teaName">教师姓名</label> 
 							<input type="text" class="form-control" id="teaName" value="${teaName }" name="teaName">
@@ -81,7 +81,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<input type="text" class="form-control" id="teaNumber" value="${teaNumber }" name="teaNumber">
 						</div>
 						<button type="submit" class="btn btn-primary">查询</button>
-						<a href="#" class="btn btn-primary " data-toggle="modal" data-target="#teacherInsertDialog" >添加</a>
+						<a href="javascript:void(0);" class="btn btn-primary " data-toggle="modal" data-target="#teacherInsertDialog" >添加</a>
 					</form>
 				</div>
 			</div>
@@ -122,7 +122,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							</tbody>
 						</table>
 						<div class="col-md-12 text-right">
-							<itheima:page url="${pageContext.request.contextPath }/admin/teacher.action" />
+							<itheima:page url="${pageContext.request.contextPath }/admin/teacher" />
 						</div>
 						<!-- /.panel-body -->
 					</div>
@@ -145,7 +145,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					</button>
 					<h4 class="modal-title" id="myModalLabel">添加教师信息</h4>
 				</div>
-				<form class="form-horizontal" id="insert_teacher_form" action="<%=basePath%>admin/teacher/insert.action" method="post" >
+				<form class="form-horizontal" id="insert_teacher_form" action="<%=basePath%>admin/teacher/insert" method="post" >
 				<div class="modal-body">
 					
 						
@@ -282,7 +282,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		function editTeacher(id) {
 			$.ajax({
 				type:"get",
-				url:"<%=basePath%>admin/teacher/edit.action",
+				url:"<%=basePath%>admin/teacher/edit",
 				data:{"id":id},
 				success:function(data) {  
 					$("#edit_tea_id").val(data.tea_id);
@@ -307,7 +307,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			
 		} --%>
 		function updateTeacher() {
-			$.post("<%=basePath%>admin/teacher/update.action",$("#edit_teacher_form").serialize(),function(data){
+			$.post("<%=basePath%>admin/teacher/update",$("#edit_teacher_form").serialize(),function(data){
 				alert("教师信息更新成功！");
 				window.location.reload();
 			});
@@ -315,7 +315,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		function deleteTeacher(id) {
 			if(confirm('确实要删除该教师吗?')) {
-				$.post("<%=basePath%>admin/teacher/delete.action",{"id":id},function(data){
+				$.post("<%=basePath%>admin/teacher/delete",{"id":id},function(data){
 					alert("教师删除更新成功！");
 					window.location.reload();
 				});

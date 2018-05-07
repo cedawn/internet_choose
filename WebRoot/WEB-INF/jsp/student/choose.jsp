@@ -133,7 +133,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 										
 										<td>
 										<!-- <button class="btn btn-danger btn-xs" type="submit">退选</button> -->
-											<a href="" class="btn btn-danger btn-xs" onclick="deleteCourse('${bor.courses.courseId}')">退选</a>
+											<a href="javascript:void(0);" class="btn btn-danger btn-xs" onclick="deleteCourse('${bor.courses.courseId}')">退选</a>
 										</td>
 									</tr>
 									<!-- </form> -->

@@ -86,9 +86,10 @@
   
   </select>
   <select id="selectAllStateNullCourse" resultMap="BaseResultMap">
-  	select * from ic_course
+  	select c.* ,t.tea_name from ic_course c left join ic_teacher t on c.course_tea_id=t.tea_id
   	<where>
-  		course_state is null
+  		c.course_state is null
+  		
   	</where>
   </select>
   <select id="selectAllCourseByState" parameterType="Long" resultMap="BaseResultMap">
